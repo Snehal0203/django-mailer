@@ -4,20 +4,19 @@ Change log
 2.1.1 - Unreleased
 ------------------
 
-* Add ``runmailer`` management command. This command starts a loop that
-  frequently checks the database for new emails. The wait time between
-  checks can be controlled using the ``MAILER_EMPTY_QUEUE_SLEEP`` setting.
+* Add ``runmailer`` management command.  This command starts a loop that frequently checks the database for new emails.
+The wait time between checks can be controlled using the MAILER_EMPTY_QUEUE_SLEEP setting.
 
+  
 2.1 - 2020-12-05
 ----------------
 
 * The ``retry_deferred`` and ``send_mail`` commands rely on the log level set
-  in your django project now. The ``-c/--cron`` option in those commands has
-  been deprecated and the logic to configure log levels and the message
-  format has been removed.
-* Changed logging to use module specific loggers to avoid interfering
-  with other loggers.
-* Added ``MAILER_USE_FILE_LOCK`` setting to allow disabling file based locking.
+  in your django project now. The ``-c/--cron`` option in those commands has been deprecated, 
+  and the logic to configure log levels
+  and the message format has been removed.
+* Changed logging to use module-specific loggers to avoid interfering with other loggers.
+* Added ``MAILER_USE_FILE_LOCK`` setting to allow disabling file-based locking.
 * Added ``-r`` option to ``purge_mail_log`` management command. Thanks julienc91
 * Fixed deprecation warnings on Django 3.1
 * Use cached DNS_NAME for performance
@@ -38,23 +37,19 @@ Change log
 * Changed DB ``priority`` field to an integer, instead of text field container an integer
 * Multi-process safety for sending emails via database row-level locking.
 
-  Previously, there was a file-system based lock to ensure that multiple
-  processes were not attempting to send the mail queue, to stop multiple sending
-  of the same email. However, this mechanism only works if all processes that
-  might be attempting to do this are on the same machine with access to the same
-  file-system.
-
-  Now, in addition to this file lock, we use transactions and row-level locking
-  in the database when attempting to send a message, which guarantees that only
-  one process can send the message. In addition, for databases that support
-  ``NOWAIT`` with ``SELECT FOR UPDATE``, such as PostgreSQL, if multiple
-  processes attempt to send the mail queue at the same time, the work should be
-  distributed between them (rather than being done by only one process).
-
-  A negative consequence is that **SQLite support is degraded**: due to the way
-  it implements locking and our use of transactions when sending the email
-  queue, you can get exceptions in other processes that are trying to add items
-  to the queue. Use of SQLite with django-mailer is **not recommended**.
+ Previously, there was a file-system-based lock to ensure that multiple processes were not 
+ attempting to send the mail queue but to stop numerous emails. However, this mechanism only
+ works if all methods trying to do this are on the same machine with access to the same file system.
+ 
+ In addition to this file lock, we use transactions and row-level locking in the database when 
+ attempting to send a message, which guarantees that only one process can send the message. 
+ In addition, for databases that support NOWAIT with SELECT FOR UPDATE, such as PostgreSQL, 
+ if multiple processes attempt to send the mail queue at the same time, the work should be 
+ distributed between them (rather than being done by only one method).
+ 
+ A negative consequence is that  **SQLite support is degraded**: Due to the way it implements 
+ locking and our use of transactions when sending the email queue, you can get exceptions 
+ in other processes trying to add items to the queue. Use of SQLite with Django-mailer is **not recommended**.
 
 * ``retry_deferred`` command has also been updated to be simpler and work
   correctly for multiple processes.
